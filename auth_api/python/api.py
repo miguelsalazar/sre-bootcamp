@@ -2,11 +2,21 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from methods import Token, Restricted
+from os import environ
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 login = Token()
 protected = Restricted()
 
+app.config['MYSQL_USER'] = environ.get("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = environ.get("MYSQL_PASSWORD")
+app.config['MYSQL_HOST'] = environ.get("MYSQL_HOST")
+app.config['MYSQL_DB'] = environ.get("MYSQL_DB")
+app.config['MYSQL_PORT'] = int(environ.get("MYSQL_PORT"))
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+mysql = MySQL(app)
 
 # Just a health check
 @app.route("/")
@@ -25,6 +35,12 @@ def url_health():
 def url_login():
     username = request.form['username']
     password = request.form['password']
+
+    cur = mysql.connection.cursor()
+    query = f"SELECT * FROM users WHERE username='{username}';"
+    cur.execute(query)
+    results = cur.fetchall()
+    print(results)
     res = {
         "data": login.generate_token(username, password)
     }
