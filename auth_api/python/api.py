@@ -4,6 +4,8 @@ from flask import request
 from methods import Token, Restricted
 from os import environ
 from flask_mysqldb import MySQL
+import hashlib
+import jwt
 
 app = Flask(__name__)
 login = Token()
@@ -40,10 +42,21 @@ def url_login():
     query = f"SELECT * FROM users WHERE username='{username}';"
     cur.execute(query)
     results = cur.fetchall()
-    print(results)
-    res = {
-        "data": login.generate_token(username, password)
-    }
+
+    salt = results[0]['salt']
+    salted_input = str(password + salt).encode('utf-8')
+    h = hashlib.sha512()
+    h.update(salted_input)
+    hashed_password = h.hexdigest()
+    db_password = results[0]['password']    
+    role = results[0]['role']
+
+    res = {}
+    if hashed_password == db_password:
+        res = {
+            "data": login.generate_token(role)
+        }
+
     return jsonify(res)
 
 
