@@ -18,4 +18,22 @@ class Token:
 class Restricted:
 
     def access_data(self, authorization):
-        return 'test'
+        data = ''
+        print(authorization)
+        print(environ.get("JWT_SECRET_KEY"))
+        try:
+            payload = jwt.decode(
+                authorization, 
+                environ.get("JWT_SECRET_KEY"), 
+                algorithms=["HS256"]
+            )
+            if payload:
+                data = 'You are under protected data'
+        except jwt.InvalidTokenError:
+            data = 'Error: Invalid token.'
+        except Exception:
+            data = 'Error'
+        return data 
+
+            
+
