@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask import abort
 from methods import Token, Restricted
 from os import environ
 from flask_mysqldb import MySQL
@@ -56,8 +57,9 @@ def url_login():
         res = {
             "data": login.generate_token(role)
         }
-
-    return jsonify(res)
+        return jsonify(res)
+    else:
+        abort(403)
 
 
 # # e.g. http://127.0.0.1:8000/protected
