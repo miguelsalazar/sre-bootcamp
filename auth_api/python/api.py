@@ -2,11 +2,21 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from methods import Token, Restricted
+from flask_mysqldb import MySQL
+import os 
 
 app = Flask(__name__)
 login = Token()
 protected = Restricted()
 
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB")
+app.config['MYSQL_PORT'] = os.environ.get("MYSQL_PORT")
+app.config['MYSQL_CURSORCLASS'] = os.environ.get("MYSQL_CURSORCLASS")
+
+mysql = MySQL(app)
 
 # Just a health check
 @app.route("/")
