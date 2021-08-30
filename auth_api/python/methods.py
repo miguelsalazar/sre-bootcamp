@@ -19,8 +19,6 @@ class Restricted:
 
     def access_data(self, authorization):
         data = ''
-        print(authorization)
-        print(environ.get("JWT_SECRET_KEY"))
         try:
             payload = jwt.decode(
                 authorization, 
