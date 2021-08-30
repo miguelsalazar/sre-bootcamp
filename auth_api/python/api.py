@@ -63,7 +63,8 @@ def url_login():
 # # e.g. http://127.0.0.1:8000/protected
 @app.route("/protected")
 def url_protected():
-    auth_token = request.headers.get('Authorization')
+    auth_header = request.headers.get('Authorization')
+    auth_token = auth_header.split(" ")[1]
     res = {
         "data": protected.access_data(auth_token)
     }
