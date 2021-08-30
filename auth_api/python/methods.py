@@ -5,14 +5,17 @@ from os import environ
 class Token:
 
     def generate_token(self, role):
-        payload = {
-            'role': role
-        }
-        return jwt.encode(
-                payload,
-                environ.get('JWT_SECRET_KEY'),
-                algorithm='HS256'
-        )
+        try: 
+            payload = {
+                'role': role
+            }
+            return jwt.encode(
+                    payload,
+                    environ.get('JWT_SECRET_KEY'),
+                    algorithm='HS256'
+            )
+        except Exception as e:
+            return e 
 
 
 class Restricted:
@@ -29,8 +32,8 @@ class Restricted:
                 data = 'You are under protected data'
         except jwt.InvalidTokenError:
             data = 'Error: Invalid token.'
-        except Exception:
-            data = 'Error'
+        except Exception as e:
+            data = e
         return data 
 
             
