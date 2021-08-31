@@ -34,7 +34,6 @@ class Token:
     
     def hash_password(self, salt, password):
         salted_input = str(password + salt).encode()
-        print(salted_input)
         h = hashlib.sha512()
         h.update(salted_input)
         hashed_password = h.hexdigest()

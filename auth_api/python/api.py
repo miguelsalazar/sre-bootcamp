@@ -12,7 +12,7 @@ conn = {
     'password': environ.get("MYSQL_PASSWORD"),
     'host': environ.get("MYSQL_HOST"),
     'database': environ.get("MYSQL_DB"),
-    'port': int(environ.get("MYSQL_PORT"))
+    'port': environ.get("MYSQL_PORT")
 }
 
 login = Token(conn)
