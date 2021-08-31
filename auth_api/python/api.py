@@ -6,15 +6,17 @@ from methods import Token, Restricted
 from os import environ
 
 app = Flask(__name__)
-login = Token(app)
-protected = Restricted()
 
-app.config['MYSQL_USER'] = environ.get("MYSQL_USER")
-app.config['MYSQL_PASSWORD'] = environ.get("MYSQL_PASSWORD")
-app.config['MYSQL_HOST'] = environ.get("MYSQL_HOST")
-app.config['MYSQL_DB'] = environ.get("MYSQL_DB")
-app.config['MYSQL_PORT'] = int(environ.get("MYSQL_PORT"))
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+conn = {
+    'user': environ.get("MYSQL_USER"),
+    'password': environ.get("MYSQL_PASSWORD"),
+    'host': environ.get("MYSQL_HOST"),
+    'database': environ.get("MYSQL_DB"),
+    'port': int(environ.get("MYSQL_PORT"))
+}
+
+login = Token(conn)
+protected = Restricted()
 
 # Just a health check
 @app.route("/")
